@@ -1,5 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import '../pages/auth_pages.dart';
 import '../pages/picture_screen.dart';
 import '../pages/blank_page.dart';
@@ -7,9 +7,26 @@ import '../pages/blank_page.dart';
 class MainPage extends StatelessWidget {
   const MainPage({super.key});
 
+  void logout(BuildContext context) async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const AuthPage()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text("DISHGUISE"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () => logout(context),
+          )
+        ],
+      ),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -27,9 +44,13 @@ class MainPage extends StatelessWidget {
                 children: [
                   const Text(
                     "DISHGUISE",
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
-                  Image.asset("assets/small_logo.png", width: 40), // Small Logo beside Title
+                  Image.asset("assets/small_logo.png", width: 40),
                 ],
               ),
               const SizedBox(height: 20),
@@ -38,38 +59,44 @@ class MainPage extends StatelessWidget {
               }),
               const SizedBox(height: 10),
               buttonWidget(context, "Inspiration", Colors.green, Icons.lightbulb, () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const BlankPage()));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const BlankPage()),
+                );
               }),
               const SizedBox(height: 10),
               buttonWidget(context, "Evidence", Colors.orange, Icons.upload, () {}),
               const SizedBox(height: 10),
               buttonWidget(context, "SOS", Colors.red, Icons.sos, () {}),
               const SizedBox(height: 10),
-
-              // ✅ Stealth Mode Circular Button (Reverse Button)
               Align(
                 alignment: Alignment.centerRight,
                 child: IconButton(
                   icon: const Icon(Icons.refresh, size: 40, color: Colors.white),
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const PictureScreen()));
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const PictureScreen()),
+                    );
                   },
                 ),
               ),
-
               const Spacer(),
-
-              // ✅ Chatbot Section
               Container(
                 height: 200,
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
-                  boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 5)],
+                  boxShadow: [
+                    BoxShadow(color: Colors.black26, blurRadius: 5),
+                  ],
                 ),
                 child: const Center(
-                  child: Text("Chatbot Coming Soon!", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  child: Text(
+                    "Chatbot Coming Soon!",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
@@ -81,8 +108,13 @@ class MainPage extends StatelessWidget {
   }
 }
 
-// ✅ Button Widget
-Widget buttonWidget(BuildContext context, String text, Color color, IconData icon, VoidCallback onTap) {
+Widget buttonWidget(
+  BuildContext context,
+  String text,
+  Color color,
+  IconData icon,
+  VoidCallback onTap,
+) {
   return SizedBox(
     width: double.infinity,
     child: ElevatedButton.icon(
@@ -92,13 +124,15 @@ Widget buttonWidget(BuildContext context, String text, Color color, IconData ico
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
       icon: Icon(icon, color: Colors.white),
-      label: Text(text, style: const TextStyle(fontSize: 18, color: Colors.white)),
+      label: Text(
+        text,
+        style: const TextStyle(fontSize: 18, color: Colors.white),
+      ),
       onPressed: onTap,
     ),
   );
 }
 
-// ✅ Helplines Popup
 void showHelplinesPopup(BuildContext context) {
   showDialog(
     context: context,
@@ -115,7 +149,10 @@ void showHelplinesPopup(BuildContext context) {
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Close")),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Close"),
+          ),
         ],
       );
     },

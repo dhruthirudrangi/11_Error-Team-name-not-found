@@ -1,31 +1,33 @@
 import 'package:flutter/material.dart';
-import 'main_page.dart'; // Import MainPage for navigation
-import '../services/auth_services.dart';
-import '../pages/auth_pages.dart'; // Ensure correct path
+import 'auth_pages.dart'; // Ensure this file exists
 
-
-class GetStartedScreen extends StatelessWidget {
-  final AuthService _authService = AuthService();
-
-  void _signOut(BuildContext context) async {
-    await _authService.signOut();
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => AuthPage()),
-    );
-  }
+class GetStartedPage extends StatelessWidget {
+  const GetStartedPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Welcome")),
       body: Center(
-        child: ElevatedButton(
-          onPressed: () => _signOut(context),
-          child: Text("Sign Out"),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              "Welcome to Dishguise!",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AuthPage()),
+                );
+              },
+              child: const Text("Welcome!"),
+            ),
+          ],
         ),
       ),
     );
   }
 }
-

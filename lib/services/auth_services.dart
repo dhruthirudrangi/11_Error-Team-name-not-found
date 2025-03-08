@@ -3,21 +3,28 @@ import 'package:firebase_auth/firebase_auth.dart';
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Future<User?> signInAnonymously() async {
+  // Signup Method
+  Future<String?> signUp(String email, String password) async {
     try {
-      UserCredential userCredential = await _auth.signInAnonymously();
-      return userCredential.user;
+      await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      return null; // Success, no error message
     } catch (e) {
-      print("Error signing in anonymously: $e");
-      return null;
+      return e.toString(); // Return error message
     }
   }
 
-  Future<void> signOut() async {
-    await _auth.signOut();
+  // Login Method
+  Future<String?> signIn(String email, String password) async {
+    try {
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      return null; // Success, no error
+    } catch (e) {
+      return e.toString(); // Return error message
+    }
   }
 
-  User? getCurrentUser() {
-    return _auth.currentUser;
+  // Logout Method
+  Future<void> signOut() async {
+    await _auth.signOut();
   }
 }
