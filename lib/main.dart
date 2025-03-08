@@ -1,142 +1,269 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import '../pages/auth_pages.dart';
 
-void main() aync{
-
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  if(kIsWeb){
-    await Firebase.initializeApp(
-    options: const FirebaseOptions(
-      apiKey: "AIzaSyDoAoSglA2UTx5XvJIZ_jjsVMZKtwvXdtw",
-      authDomain: "dishguise-cc6a0.firebaseapp.com",
-      projectId: "dishguise-cc6a0",
-      storageBucket: "dishguise-cc6a0.firebasestorage.app",
-      messagingSenderId: "525623252385",
-      appId: "1:525623252385:web:e7937d8301989cefb667e0")
-  );
-  }else{
-    await Firebase.initializeApp();
-  }
-  
-
+  await Firebase.initializeApp();
   runApp(const MyApp());
+}
+
+class UserAuth extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: AuthPage(),
+    );
+  }
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      debugShowCheckedModeBanner: false,
+      title: 'Dishguise',
+      theme: ThemeData(primarySwatch: Colors.purple),
+      home: const GetStartedScreen(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+// ✅ Initial "Get Started" Page
+class GetStartedScreen extends StatelessWidget {
+  const GetStartedScreen({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.purple, Colors.deepPurple],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Center(
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const PictureScreen()));
+            },
+            child: const Text("Get Started", style: TextStyle(fontSize: 18, color: Colors.purple)),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+// ✅ First Screen: Zoomed-Out Image with Bottom Navigation
+class PictureScreen extends StatefulWidget {
+  const PictureScreen({super.key});
 
-  void _incrementCounter() {
+  @override
+  _PictureScreenState createState() => _PictureScreenState();
+}
+
+class _PictureScreenState extends State<PictureScreen> {
+  int homeTapCount = 0;
+
+  void _onHomePressed() {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      homeTapCount++;
+      if (homeTapCount == 3) {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const MainPage()));
+        homeTapCount = 0; // Reset count after navigation
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+      body: Stack(
+        children: [
+          // ✅ Zoomed Out Image (using BoxFit.contain)
+          Positioned.fill(
+            child: Image.asset("assets/stealth_image.png", fit: BoxFit.contain),
+          ),
+
+          // ✅ Bottom Navigation Bar
+          Positioned(
+            bottom: 20,
+            left: 20,
+            right: 20,
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.6),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.home, color: Colors.white, size: 30),
+                    onPressed: _onHomePressed,
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.folder, color: Colors.white, size: 30),
+                    onPressed: () {},
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.star, color: Colors.white, size: 30),
+                    onPressed: () {},
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.history, color: Colors.white, size: 30),
+                    onPressed: () {},
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+    );
+  }
+}
+
+// ✅ Main Page (Purple Gradient, Reverse Button & Chatbot)
+class MainPage extends StatelessWidget {
+  const MainPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.purple, Colors.deepPurple],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    "DISHGUISE",
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  Image.asset("assets/small_logo.png", width: 40), // Small Logo beside Title
+                ],
+              ),
+              const SizedBox(height: 20),
+              buttonWidget(context, "Helplines", Colors.blue, Icons.phone, () {
+                showHelplinesPopup(context);
+              }),
+              const SizedBox(height: 10),
+              buttonWidget(context, "Inspiration", Colors.green, Icons.lightbulb, () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const BlankPage()));
+              }),
+              const SizedBox(height: 10),
+              buttonWidget(context, "Evidence", Colors.orange, Icons.upload, () {}),
+              const SizedBox(height: 10),
+              buttonWidget(context, "SOS", Colors.red, Icons.sos, () {}),
+              const SizedBox(height: 10),
+
+              // ✅ Stealth Mode Circular Button (Reverse Button)
+              Align(
+                alignment: Alignment.centerRight,
+                child: IconButton(
+                  icon: const Icon(Icons.refresh, size: 40, color: Colors.white),
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const PictureScreen()));
+                  },
+                ),
+              ),
+
+              const Spacer(),
+
+              // ✅ Chatbot Section
+              Container(
+                height: 200,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 5)],
+                ),
+                child: const Center(
+                  child: Text("Chatbot Coming Soon!", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                ),
+              ),
+              const SizedBox(height: 20),
+            ],
+          ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+
+// ✅ Button Widget
+Widget buttonWidget(BuildContext context, String text, Color color, IconData icon, VoidCallback onTap) {
+  return SizedBox(
+    width: double.infinity,
+    child: ElevatedButton.icon(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: color,
+        padding: const EdgeInsets.symmetric(vertical: 15),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      ),
+      icon: Icon(icon, color: Colors.white),
+      label: Text(text, style: const TextStyle(fontSize: 18, color: Colors.white)),
+      onPressed: onTap,
+    ),
+  );
+}
+
+// ✅ Helplines Popup
+void showHelplinesPopup(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text("Women Helplines - Bengaluru"),
+        content: const Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(leading: Icon(Icons.phone), title: Text("National Helpline: 1091")),
+            ListTile(leading: Icon(Icons.phone), title: Text("Karnataka Women Helpline: 181")),
+            ListTile(leading: Icon(Icons.phone), title: Text("Police Emergency: 112")),
+            ListTile(leading: Icon(Icons.phone), title: Text("NGO Support: 080-23412345")),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Close")),
+        ],
+      );
+    },
+  );
+}
+
+// ✅ Blank Page for Inspiration
+class BlankPage extends StatelessWidget {
+  const BlankPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Inspiration")),
+      body: const Center(child: Text("Content will be added soon", style: TextStyle(fontSize: 20))),
     );
   }
 }
