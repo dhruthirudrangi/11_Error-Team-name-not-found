@@ -1,27 +1,16 @@
 import 'package:flutter/material.dart';
-import '../services/auth_services.dart'; // Ensure correct path
+import '../services/auth_services.dart';
+import 'get_started.dart'; // Ensure this file exists
 
-class AuthPage extends StatefulWidget {
-  @override
-  _AuthPageState createState() => _AuthPageState();
-}
-
-class _AuthPageState extends State<AuthPage> {
+class AuthPage extends StatelessWidget {
   final AuthService _authService = AuthService();
-  bool _isLoggedIn = false;
 
-  void _signIn() async {
+  void _signIn(BuildContext context) async {
     await _authService.signInAnonymously();
-    setState(() {
-      _isLoggedIn = true;
-    });
-  }
-
-  void _signOut() async {
-    await _authService.signOut();
-    setState(() {
-      _isLoggedIn = false;
-    });
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => GetStartedScreen()),
+    );
   }
 
   @override
@@ -29,15 +18,10 @@ class _AuthPageState extends State<AuthPage> {
     return Scaffold(
       appBar: AppBar(title: Text("Anonymous Auth")),
       body: Center(
-        child: _isLoggedIn
-            ? ElevatedButton(
-                onPressed: _signOut,
-                child: Text("Sign Out"),
-              )
-            : ElevatedButton(
-                onPressed: _signIn,
-                child: Text("Sign in Anonymously"),
-              ),
+        child: ElevatedButton(
+          onPressed: () => _signIn(context),
+          child: Text("Sign in Anonymously"),
+        ),
       ),
     );
   }
