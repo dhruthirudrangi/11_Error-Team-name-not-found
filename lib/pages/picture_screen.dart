@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import '../pages/auth_pages.dart';
 import '../pages/main_page.dart';
-import '../pages/blank_page.dart';
-
 
 class PictureScreen extends StatefulWidget {
   const PictureScreen({super.key});
@@ -19,7 +17,10 @@ class _PictureScreenState extends State<PictureScreen> {
     setState(() {
       homeTapCount++;
       if (homeTapCount == 3) {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const MainPage()));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MainPage()), // ✅ Navigate to MainPage
+        );
         homeTapCount = 0; // Reset count after navigation
       }
     });
@@ -30,12 +31,9 @@ class _PictureScreenState extends State<PictureScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          // ✅ Zoomed Out Image (using BoxFit.contain)
           Positioned.fill(
             child: Image.asset("assets/stealth_image.png", fit: BoxFit.contain),
           ),
-
-          // ✅ Bottom Navigation Bar
           Positioned(
             bottom: 20,
             left: 20,

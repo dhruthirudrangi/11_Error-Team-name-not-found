@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
 import 'pages/auth_pages.dart';
 import 'pages/main_page.dart';
-import 'pages/get_started.dart';
+import 'pages/picture_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasData) {
-            return const MainPage();
+            return const PictureScreen();  // ✅ Show PictureScreen first after login
           } else {
             return const AuthPage();
           }

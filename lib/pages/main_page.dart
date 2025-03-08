@@ -1,8 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:recipe/pages/picture_screen.dart';
 import '../pages/auth_pages.dart';
-import '../pages/picture_screen.dart';
-import '../pages/blank_page.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({super.key});
@@ -58,12 +57,7 @@ class MainPage extends StatelessWidget {
                 showHelplinesPopup(context);
               }),
               const SizedBox(height: 10),
-              buttonWidget(context, "Inspiration", Colors.green, Icons.lightbulb, () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const BlankPage()),
-                );
-              }),
+              buttonWidget(context, "Inspiration", Colors.green, Icons.lightbulb, () {}),
               const SizedBox(height: 10),
               buttonWidget(context, "Evidence", Colors.orange, Icons.upload, () {}),
               const SizedBox(height: 10),
@@ -81,6 +75,7 @@ class MainPage extends StatelessWidget {
                   },
                 ),
               ),
+              const SizedBox(height: 10),
               const Spacer(),
               Container(
                 height: 200,
